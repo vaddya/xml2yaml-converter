@@ -1,0 +1,35 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.1.1.RELEASE")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+group 'com.vaddya'
+version '1.0-SNAPSHOT'
+
+bootJar {
+    baseName = 'gs-spring-boot'
+    version = '0.1.0'
+}
+
+repositories {
+    jcenter()
+}
+
+sourceCompatibility = 1.10
+targetCompatibility = 1.10
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-web")
+    compile("com.fasterxml.jackson.dataformat:jackson-dataformat-xml")
+    compile("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml")
+    testCompile("junit:junit")
+}
