@@ -1,13 +1,25 @@
 package com.vaddya.xml2yaml.service;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Map;
+
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
 
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.Module;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
+import com.google.xmldeser.ArrayInferringUntypedObjectDeserializer;
+import com.google.xmldeser.RootSniffingXMLStreamReader;
+
 
 @Service
 public class ConverterService {
@@ -18,6 +30,10 @@ public class ConverterService {
 
     public ConverterService() {
         xmlMapper = new XmlMapper();
+        Module module = new SimpleModule().addDeserializer(
+                Object.class, new ArrayInferringUntypedObjectDeserializer()
+        ); // jackson xml array support
+        xmlMapper.registerModule(module);
         yamlMapper = new YAMLMapper();
     }
 
@@ -28,12 +44,15 @@ public class ConverterService {
      * @return parsed map
      * @throws IOException if a problem occurred
      */
-    public Map<String, Object> parseXml(String xml) throws IOException {
-        Map<String, Object> data = xmlMapper.readValue(xml, Map.class);
-        for (var entry : data.entrySet()) {
-            System.out.println(entry.getKey() + ": " + entry.getValue());
-        }
-        return data;
+    public Map<String, Object> parseXml(String xml) throws IOException, XMLStreamException {
+        InputStream stream = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8));
+        RootSniffingXMLStreamReader reader = new RootSniffingXMLStreamReader(
+                XMLInputFactory.newFactory().createXMLStreamReader(stream)
+        ); // save xml root name
+        Map<String, Object> data = xmlMapper.readValue(reader, Map.class);
+        Map<String, Object> dataWithRoot = new HashMap<>();
+        dataWithRoot.put(reader.getLocalNameForRootElement(), data);
+        return dataWithRoot;
     }
 
     /**
@@ -46,7 +65,9 @@ public class ConverterService {
     public String formatYaml(Map<String, Object> data) throws IOException {
         StringWriter stringWriter = new StringWriter();
         yamlMapper.writeValue(stringWriter, data);
-        return stringWriter.toString();
+        String yaml = stringWriter.toString();
+        yaml = yaml.substring(yaml.indexOf("---") + 4); // remove three leading dashes
+        return yaml;
     }
 
 }

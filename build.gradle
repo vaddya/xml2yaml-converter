@@ -1,9 +1,16 @@
 buildscript {
     repositories {
-        mavenCentral()
+        jcenter()
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:2.1.1.RELEASE")
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+        maven { url "https://jitpack.io" }
     }
 }
 
@@ -29,7 +36,17 @@ targetCompatibility = 1.10
 
 dependencies {
     compile("org.springframework.boot:spring-boot-starter-web")
+
+    // Serialization
     compile("com.fasterxml.jackson.dataformat:jackson-dataformat-xml")
     compile("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml")
-    testCompile("junit:junit")
+    compile("com.github.DinoChiesa:deserialize-xml-arrays-jackson:master")
+
+    // Swagger
+    compile("io.springfox:springfox-swagger2:2.9.2")
+    compile("io.springfox:springfox-swagger-ui:2.9.2")
+
+    // Testing
+    testCompile("junit:junit:4.11")
+    testCompile("commons-io:commons-io:2.6")
 }
