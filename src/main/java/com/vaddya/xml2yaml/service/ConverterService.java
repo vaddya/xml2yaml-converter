@@ -44,6 +44,7 @@ public class ConverterService {
      * @return parsed map
      * @throws IOException if a problem occurred
      */
+    @SuppressWarnings("unchecked")
     public Map<String, Object> parseXml(String xml) throws IOException, XMLStreamException {
         InputStream stream = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8));
         RootSniffingXMLStreamReader reader = new RootSniffingXMLStreamReader(
