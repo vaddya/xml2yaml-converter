@@ -28,7 +28,7 @@ note:
 
 To create Docker image run Gradle task:
 
-`$ gradle docker`
+`$ ./gradlew docker`
 
 After that Docker container can be run with optional port parameter (default is 8080):
 
