@@ -20,7 +20,6 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.google.xmldeser.ArrayInferringUntypedObjectDeserializer;
 import com.google.xmldeser.RootSniffingXMLStreamReader;
 
-
 @Service
 public class ConverterService {
 
