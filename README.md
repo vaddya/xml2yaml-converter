@@ -1,6 +1,6 @@
 # XML to YAML Converter
 
-Very powerful ane easy to use XML to YAML converter service. It's written in Java 10 using Spring Boot framework.
+Very powerful and easy to use XML to YAML converter service. It's written in Java 10 using Spring Boot framework.
 
 ## Example
 
